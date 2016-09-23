@@ -125,15 +125,28 @@ letters_in_word = list(word_to_guess)
 
 word_length = len(word_to_guess)
 
+guessNumber = 0
+
+letters_guessed_list = []
+
 while (word_length > 0):
     letter_guessed = raw_input('Player 2, type a letter to guess: ')
-    guessNumber = 0
+
     for letter in letters_in_word:
         if letter_guessed == letter:
-            word_length -= 1
-            print letter
+            x = int(letters_in_word.index(letter))
+            letters_guessed_list.insert(x, letter)
+            word_length = word_length - 1
+            print 'Correct! %s more letters to go.' %(word_length)
+            break
     if letter_guessed != letter:
-        guessNumber += 1
-        print gallows(guessNumber)
-        
-        print word_length
+        guessNumber = guessNumber + 1
+        if guessNumber == 14:
+            print gallows(guessNumber)
+            print 'You lost. Too bad.'
+            break
+    letters_guessed_list.sort(key=lambda (x,y): letters_in_word.index(x))
+    print gallows(guessNumber)
+    print letters_guessed_list
+if word_length == 0 and guessNumber < 13:
+    print 'Congratulations, you won.'
