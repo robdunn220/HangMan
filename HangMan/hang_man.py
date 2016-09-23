@@ -125,28 +125,41 @@ letters_in_word = list(word_to_guess)
 
 word_length = len(word_to_guess)
 
-guessNumber = 0
+MAX_WRONG = 14
+wrong = 0
+word_guessed = "_" * word_length
+used = []
 
-letters_guessed_list = []
+while (wrong < MAX_WRONG) and (word_guessed != word_to_guess):
+    print gallows(wrong)
+    print "You've used the following letters: ", used
+    print "The word: ", word_guessed
 
-while (word_length > 0):
     letter_guessed = raw_input('Player 2, type a letter to guess: ')
 
-    for letter in letters_in_word:
-        if letter_guessed == letter:
-            x = int(letters_in_word.index(letter))
-            letters_guessed_list.insert(x, letter)
-            word_length = word_length - 1
-            print 'Correct! %s more letters to go.' %(word_length)
-            break
-    if letter_guessed != letter:
-        guessNumber = guessNumber + 1
-        if guessNumber == 14:
-            print gallows(guessNumber)
-            print 'You lost. Too bad.'
-            break
-    letters_guessed_list.sort(key=lambda (x,y): letters_in_word.index(x))
-    print gallows(guessNumber)
-    print letters_guessed_list
-if word_length == 0 and guessNumber < 13:
+    while (letter_guessed in used):
+        print "You've already guessed the letter: ", letter_guessed
+        letter_guessed = raw_input('Player 2, type a letter to guess: ')
+
+    used.append(letter_guessed)
+
+    if (letter_guessed in word_to_guess):
+        letters_left = len(word_to_guess) - 1
+        print 'Correct!'
+
+        new = ""
+        for i in range(word_length):
+            if letter_guessed == letters_in_word[i]:
+                new += letter_guessed
+            else:
+                new += word_guessed[i]
+        word_guessed = new
+    else:
+        print "Sorry, ",letter_guessed, "isn't in the word."
+        wrong = wrong + 1
+
+if wrong == 14:
+    print gallows(wrong)
+    print 'You lost. Too bad.'
+else:
     print 'Congratulations, you won.'
